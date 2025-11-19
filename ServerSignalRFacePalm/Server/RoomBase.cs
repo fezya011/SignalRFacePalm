@@ -16,12 +16,12 @@ namespace ServerSignalRFacePalm.Server
             string result = string.Empty;
             if (last == null)
             {
-                last = new Room { Number = Guid.NewGuid().ToString() };
+                last = new Room { Number = Guid.NewGuid().ToString().ToLower() };
                 rooms.Add(last.Number, last);
             }
             result = last.Number;
             last.PlayerState.Add(player.Name, player);
-            if (last.PlayerState.Count >= 5)
+            if (last.PlayerState.Count >= 2)
                 last = null;
 
             return result;
@@ -29,23 +29,31 @@ namespace ServerSignalRFacePalm.Server
 
         internal async Task AddRoundActionAsync(RoomAction action, IHubCallerClients clients)
         {
+            Console.WriteLine("Добавление действия: проверка хп");
             if (rooms[action.GroupId].PlayerState[action.Actor].HP <= 0)
                 return;
-
+            Console.WriteLine("Добавление действия: проверка на повторное действие");
+            if (!defenceActions.ContainsKey(action.GroupId))
+            {
+                defenceActions.Add(action.GroupId, new());
+                attackActions.Add(action.GroupId, new());
+            }
             var alreadyDefence = defenceActions[action.GroupId].Any(s => s.Actor == action.Actor);
             var alreadyAttack = attackActions[action.GroupId].Any(s => s.Actor == action.Actor);
 
             if (alreadyAttack || alreadyDefence)
                 return;
-
+            
             if (action.ActionType == 1)
                 attackActions[action.GroupId].Enqueue(action);
             else
                 defenceActions[action.GroupId].Enqueue(action);
 
             int count = attackActions[action.GroupId].Count + defenceActions[action.GroupId].Count;
+            Console.WriteLine("Добавление действия и подсчет: " + count);
             if (count == rooms[action.GroupId].PlayerState.Count(s=>s.Value.HP > 0))
             {
+                Console.WriteLine("Месилово!");
                 await PlayRoundAsync(action.GroupId, clients);
             }
         }
@@ -58,8 +66,8 @@ namespace ServerSignalRFacePalm.Server
             while (defenceActions[groupId].Count > 0)
             {
                 var action = defenceActions[groupId].Dequeue();
-                defence.Add(action.Actor, random.Next(2, 6));
-                actions.Add($"Игрок {action.Actor} защищается. Очков защиты: {defence[action.Actor]}");
+                defence.Add(action.Target, random.Next(2, 6));
+                actions.Add($"Игрок {action.Actor} защищает {action.Target} . Очков защиты: {defence[action.Target]}");
             }
             while (attackActions[groupId].Count > 0)
             {
@@ -93,7 +101,7 @@ namespace ServerSignalRFacePalm.Server
             if (rooms[groupId].PlayerState.Count(s => s.Value.HP > 0) > 1)
                 await clients.Group(groupId).SendAsync("StartRound", rooms[groupId]);
             else
-                await clients.Group(groupId).SendAsync("Winner", rooms[groupId].PlayerState.FirstOrDefault(s => s.Value.HP > 0));
+                await clients.Group(groupId).SendAsync("Winner", rooms[groupId].PlayerState.FirstOrDefault(s => s.Value.HP > 0).Value);
             rooms.Remove(groupId);
         }
 
@@ -101,7 +109,7 @@ namespace ServerSignalRFacePalm.Server
         {
             if (!rooms.TryGetValue(groupId, out Room room))
                 return false;
-            return room.PlayerState.Count >= 5;
+            return room.PlayerState.Count >= 2;
         }
 
         internal async Task StartAsync(string groupId, IHubCallerClients clients)
