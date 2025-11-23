@@ -43,7 +43,7 @@ public class Program
     public static async Task MainTask()
     {
         client = new HubConnectionBuilder()
-                        .WithUrl("https://localhost:7205/game")
+                        .WithUrl("http://localhost:5079/game")
                         .WithAutomaticReconnect()
                         .Build();
         client.On<Room>("StartRound", s =>
