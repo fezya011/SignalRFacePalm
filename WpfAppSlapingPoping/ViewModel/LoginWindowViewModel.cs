@@ -34,7 +34,6 @@ namespace WpfAppSlapingPoping.ViewModel
                     MessageBox.Show("Такое имя пользователя уже используется");
                     return;
                 }
-
                 else
                 {
                     GameWindow gameWindow = new GameWindow();

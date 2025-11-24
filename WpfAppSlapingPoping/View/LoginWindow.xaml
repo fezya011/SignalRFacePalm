@@ -133,7 +133,7 @@
 
                     <Button Content="Войти в игру" 
                             Style="{StaticResource ModernButton}"
-                            Command="{Binding JoinGameCommand}"
+                            Command="{Binding JoinGameButton}"
                             Height="45"
                             Margin="0,20,0,0"/>
                 </StackPanel>
