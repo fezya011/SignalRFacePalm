@@ -20,7 +20,7 @@ namespace WpfAppSlapingPoping
         public LoginWindow()
         {
             InitializeComponent();
-            DataContext = new LoginWindowViewModel();
+            DataContext = new LoginWindowViewModel(this);
         }
     }
 }

@@ -5,22 +5,139 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfAppSlapingPoping"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="410">
-    <Grid >
+        Title="Smash the Ass" Height="500" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="White">
+
+    <Window.Resources>
+        <Style x:Key="ModernTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontFamily" Value="Courier New"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Courier New"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CaretBrush" Value="Black"/>
+            <Setter Property="SelectionBrush" Value="#CC0000"/>
+            <Setter Property="SelectionTextBrush" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        Margin="0,4,0,-2"
+                                        Background="Transparent"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontFamily" Value="Courier New"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#333333"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#333333"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#666666"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#666666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RoundedBorder" TargetType="Border">
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="25"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" HorizontalAlignment="Center">
-            <TextBlock Text="Smash the ass" FontSize="20" FontFamily="Arial Black"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,40">
+            <TextBlock Text="SMASH THE ASS" 
+                      FontSize="32" 
+                      FontFamily="Courier New"
+                      FontWeight="Bold"
+                      Foreground="Black"
+                      TextAlignment="Center"/>
+            <TextBlock Text="Arcade Game" 
+                      FontSize="16" 
+                      Style="{StaticResource ModernTextBlock}"
+                      Margin="0,8,0,0"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="Введите имя" FontFamily="Arial Black"/>
-            <TextBox Text="" />
-            <Button Content="Войти в игру" FontFamily="Arial Black"/>
-        </StackPanel>
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" Width="300">
+            <Border Style="{StaticResource RoundedBorder}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="ВХОД В ИГРУ" 
+                              Style="{StaticResource ModernTextBlock}"
+                              FontSize="20"
+                              Margin="0,0,0,20"/>
 
+                    <TextBlock Text="Введите ваше имя:" 
+                              Style="{StaticResource ModernTextBlock}"
+                              FontSize="14"
+                              Margin="0,0,0,8"
+                              HorizontalAlignment="Left"/>
+
+                    <TextBox x:Name="NameTextBox"
+                            Text="{Binding Name}"
+                            Style="{StaticResource ModernTextBox}"
+                            Height="40"/>
+
+                    <Button Content="Войти в игру" 
+                            Style="{StaticResource ModernButton}"
+                            Command="{Binding JoinGameCommand}"
+                            Height="45"
+                            Margin="0,20,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
     </Grid>
 </Window>

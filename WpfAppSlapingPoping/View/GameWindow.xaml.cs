@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfAppSlapingPoping.ViewModel;
 
 namespace WpfAppSlapingPoping.View
 {
@@ -22,6 +23,7 @@ namespace WpfAppSlapingPoping.View
         public GameWindow()
         {
             InitializeComponent();
+            DataContext = new GameWindowViewModel();
         }
     }
 }
